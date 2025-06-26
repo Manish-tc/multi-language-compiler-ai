@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeNova - Advanced Web Compiler</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CodeNova</h1>
+            <p>Compile and optimize Python & JavaScript code in real-time with advanced analysis tools</p>
+        </header>
+
+        <div class="compiler-container">
+            <div class="editor-panel">
+                <h2 class="panel-title">
+                    <i class="fas fa-code"></i>
+                    Code Editor
+                </h2>
+                <form method="POST" action="/compile" class="code-form">
+                    <div class="lang-selector">
+                        <button type="button" class="lang-btn active" data-lang="python">
+                            <i class="fab fa-python"></i> Python
+                        </button>
+                        <button type="button" class="lang-btn" data-lang="javascript">
+                            <i class="fab fa-js"></i> JavaScript
+                        </button>
+                        <input type="hidden" name="language" value="python" id="language-input">
+                    </div>
+                    <textarea class="code-editor" name="code" placeholder="Enter your code here..." spellcheck="false">{{ code or '' }}</textarea>
+                    <button type="submit" class="run-btn">
+                        <i class="fas fa-play"></i> Run Code
+                    </button>
+                </form>
+            </div>
+
+            <div class="results-panel">
+                <div class="result-tabs">
+                    <button class="tab-btn active" data-tab="output">Output</button>
+                    <button class="tab-btn" data-tab="tokens">Tokens</button>
+                    <button class="tab-btn" data-tab="optimized"></button>
+                </div>
+                
+                <div class="result-content">
+                    <div class="tab-content" id="output-tab">
+                        {% if output %}
+                            <pre class="output-success">{{ output }}</pre>
+                        {% endif %}
+                        {% if error %}
+                            <pre class="output-error">{{ error }}</pre>
+                        {% endif %}
+                        {% if not output and not error %}
+                            <p>Your code output will appear here...</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="tab-content" id="tokens-tab" style="display:none">
+                        {% if tokens %}
+                            <div>
+                                {% for token in tokens %}
+                                    <span class="token" style="background-color:  cycle '#e0f2fe', '#ecfdf5', '#fef2f2' ">
+                                        <span class="token-type">{{ token.type }}:</span>
+                                        <span class="token-value">{{ token.value }}</span>
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>Token analysis will appear here...</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="tab-content" id="optimized-tab" style="display:none">
+                        {% if optimized_code %}
+                            <pre>{{ optimized_code }}</pre>
+                        {% else %}
+                            <p>Optimized code will appear here...</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="phases-container">
+  <h2 class="phases-title">
+    <i class="fas fa-project-diagram"></i>
+    Compilation Phases
+  </h2>
+  <div class="phases-steps">
+    <div class="phase" id="phase-lexical">
+      <div class="phase-number">1</div>
+      <div>
+        <div class="phase-name">Lexical Analysis</div>
+        <div class="phase-desc">Breaking code into tokens</div>
+      </div>
+      <i class="fas fa-arrow-right phase-arrow"></i>
+    </div>
+    
+    <div class="phase" id="phase-syntax">
+      <div class="phase-number">2</div>
+      <div>
+        <div class="phase-name">Syntax Analysis</div>
+        <div class="phase-desc">Building parse tree</div>
+      </div>
+      <i class="fas fa-arrow-right phase-arrow"></i>
+    </div>
+    
+    <div class="phase" id="phase-semantic">
+      <div class="phase-number">3</div>
+      <div>
+        <div class="phase-name">Semantic Analysis</div>
+        <div class="phase-desc">Type checking & validation</div>
+      </div>
+      <i class="fas fa-arrow-right phase-arrow"></i>
+    </div>
+    
+    <div class="phase" id="phase-intermediate">
+      <div class="phase-number">4</div>
+      <div>
+        <div class="phase-name">Intermediate Code</div>
+        <div class="phase-desc">Generating abstract representation</div>
+      </div>
+      <i class="fas fa-arrow-right phase-arrow"></i>
+    </div>
+    
+    <div class="phase" id="phase-optimization">
+      <div class="phase-number">5</div>
+      <div>
+        <div class="phase-name">Code Optimization</div>
+        <div class="phase-desc">Performance improvements</div>
+      </div>
+      <i class="fas fa-arrow-right phase-arrow"></i>
+    </div>
+    
+    <div class="phase" id="phase-codegen">
+      <div class="phase-number">6</div>
+      <div>
+        <div class="phase-name">Code Generation</div>
+        <div class="phase-desc">Producing executable output</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if documentation %}
+<div class="documentation-section">
+    <h2>Documentation</h2>
+    {{ documentation|safe }}
+</div>
+{% endif %}
+
+
+        <footer class="footer">
+            <p>CodeNova &copy; 2023 | Advanced Web Compiler</p>
+        </footer>
+    </div>
+
+    <!-- Load JavaScript -->
+<script src="{{ url_for('static', filename='js/compiler-ui.js') }}"></script>
+  
+
+
+
+   
+</body>
+
+</html>
